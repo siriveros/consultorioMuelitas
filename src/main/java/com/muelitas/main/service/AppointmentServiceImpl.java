@@ -1,16 +1,24 @@
 package com.muelitas.main.service;
 
 import com.muelitas.main.dtos.AppointmentDTO;
+import com.muelitas.main.dtos.PatientDTO;
+import com.muelitas.main.dtos.PatientListResponseDTO;
 import com.muelitas.main.entities.Appointment;
+import com.muelitas.main.entities.Patient;
 import com.muelitas.main.exceptions.DataNotFoundException;
 import com.muelitas.main.repository.AppointmentRepository;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
@@ -66,5 +74,33 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public void deleteById(Long id) {
         this.appointmentRepository.deleteById(id);
+    }
+
+    @Override
+    public PatientListResponseDTO getPatientList(String date) throws ParseException {
+        SimpleDateFormat sp = new SimpleDateFormat("dd-MM-yyyy");
+        Date startDate = sp.parse(date);
+        Date endDate = DateUtils.addDays(startDate, 1);
+        List<Appointment> list = this.appointmentRepository.findByDate(startDate, endDate);
+        List<PatientDTO> patients = new ArrayList<PatientDTO>();
+
+        patients = list.stream().map(app -> {
+           Patient p = app.getPatient();
+           PatientDTO pDto = new PatientDTO();
+           BeanUtils.copyProperties(p, pDto);
+           return pDto;
+        }).collect(Collectors.toList());
+
+        PatientListResponseDTO response = new PatientListResponseDTO();
+        response.setPatients(patients);
+        return response;
+    }
+
+    @Override
+    public void getDentistMoreThanTwo(String date) throws ParseException {
+        SimpleDateFormat sp = new SimpleDateFormat("dd-MM-yyyy");
+        Date startDate = sp.parse(date);
+        Date endDate = DateUtils.addDays(startDate, 1);
+        List<Appointment> list = this.appointmentRepository.findByDateFiterAppointments(startDate, endDate);
     }
 }

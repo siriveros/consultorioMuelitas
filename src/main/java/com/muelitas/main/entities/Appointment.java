@@ -1,5 +1,6 @@
 package com.muelitas.main.entities;
 
+import com.muelitas.main.enums.AppointmentStatus;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,5 +22,8 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name="dent_serv_id", nullable = false)
     private DentistHasSpeciality dentistSpeciality;
+
+    @Enumerated(EnumType.ORDINAL)
+    private AppointmentStatus status;
 
 }
