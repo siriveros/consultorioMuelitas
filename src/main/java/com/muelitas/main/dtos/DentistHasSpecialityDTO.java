@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class DentistHasSpecialityDTO {
 
     private Long dentServId;
-    private Long dentistId;
+    private String dentistLicense;
     private Long specialityId;
 
     @JsonIgnore
@@ -23,7 +23,7 @@ public class DentistHasSpecialityDTO {
 
     public DentistHasSpecialityDTO(DentistHasSpeciality dentistHasSpeciality) {
         this.dentServId = dentistHasSpeciality.getDentServId();
-        this.dentistId = dentistHasSpeciality.getDentist().getDentistId();
+        this.dentistLicense = dentistHasSpeciality.getDentist().getLicense();
         this.specialityId = dentistHasSpeciality.getSpeciality().getSpecialityId();
 
         this.dentist = new DentistDTO(dentistHasSpeciality.getDentist());

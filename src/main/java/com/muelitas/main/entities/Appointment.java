@@ -18,7 +18,7 @@ public class Appointment {
 
     private Date dateStart;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="patient_id", nullable = false)
     private Patient patient;
 

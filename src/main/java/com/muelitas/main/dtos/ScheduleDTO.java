@@ -31,6 +31,4 @@ public class ScheduleDTO {
 
         this.dentist = new DentistDTO(schedule.getDentist());
     }
-
-
 }

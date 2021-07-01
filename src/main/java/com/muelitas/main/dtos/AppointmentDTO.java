@@ -16,8 +16,8 @@ public class AppointmentDTO {
     private Long appointmentId;
     private Date dateStart;
     private Long patientId;
-    private Long dentistSpecialityId;
-
+    private Long specialityId;
+    private String dentistLicense;
 
     @JsonIgnore
     private PatientDTO patient;
@@ -29,7 +29,8 @@ public class AppointmentDTO {
         this.appointmentId = appointment.getAppointmentId();
         this.dateStart = appointment.getDateStart();
         this.patientId = appointment.getPatient().getPatientId();
-        this.dentistSpecialityId = appointment.getDentistSpeciality().getDentServId();
+        this.dentistLicense = appointment.getDentistSpeciality().getDentist().getLicense();
+        this.specialityId = appointment.getDentistSpeciality().getSpeciality().getSpecialityId();
 
         this.patient = new PatientDTO(appointment.getPatient());
         this.dentistSpeciality = new DentistHasSpecialityDTO(appointment.getDentistSpeciality());

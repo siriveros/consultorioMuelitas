@@ -23,6 +23,12 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    @Autowired
+    private DentistHasSpecialityService dentistHasSpecialityService;
+
+    @Autowired
+    private PatientService patientService;
+
     @Override
     public List<AppointmentDTO> findAll() {
         List<Appointment> appointmentList = this.appointmentRepository.findAll();
@@ -44,6 +50,11 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     @Override
     public AppointmentDTO save(AppointmentDTO appointmentDTO) {
+        appointmentDTO.setPatient(this.patientService.findById(appointmentDTO.getPatientId()));
+        appointmentDTO.setDentistSpeciality(
+                this.dentistHasSpecialityService.findDentistHasSpecialityByDentist_LicenseAndSpeciality_SpecialityId
+                        (appointmentDTO.getDentistLicense(),appointmentDTO.getSpecialityId())
+        );
         return new AppointmentDTO(this.appointmentRepository.save(new Appointment(appointmentDTO)));
     }
 
@@ -53,6 +64,11 @@ public class AppointmentServiceImpl implements AppointmentService{
         if(appointment.isEmpty()){
             throw new DataNotFoundException("Error, no se encontro el turno:  " + appointmentDTO.getAppointmentId());
         }
+        appointmentDTO.setPatient(this.patientService.findById(appointmentDTO.getPatientId()));
+        appointmentDTO.setDentistSpeciality(
+                this.dentistHasSpecialityService.findDentistHasSpecialityByDentist_LicenseAndSpeciality_SpecialityId
+                        (appointmentDTO.getDentistLicense(),appointmentDTO.getSpecialityId())
+        );
         return new AppointmentDTO(this.appointmentRepository.save(new Appointment(appointmentDTO)));
     }
 

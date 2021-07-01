@@ -18,4 +18,6 @@ public interface DentistHasSpecialityService {
 
     void deleteById(Long id);
 
+    DentistHasSpecialityDTO findDentistHasSpecialityByDentist_LicenseAndSpeciality_SpecialityId(String license, Long specialityId) throws DataNotFoundException;
+
 }
