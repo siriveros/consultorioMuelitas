@@ -2,6 +2,7 @@ package com.muelitas.main.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muelitas.main.entities.Appointment;
+import com.muelitas.main.enums.AppointmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ public class AppointmentDTO {
     private Long patientId;
     private Long specialityId;
     private String dentistLicense;
+    private AppointmentStatus status;
+
 
     @JsonIgnore
     private PatientDTO patient;
@@ -32,6 +35,7 @@ public class AppointmentDTO {
         this.dentistLicense = appointment.getDentistSpeciality().getDentist().getLicense();
         this.specialityId = appointment.getDentistSpeciality().getSpeciality().getSpecialityId();
 
+        this.status = appointment.getStatus();
         this.patient = new PatientDTO(appointment.getPatient());
         this.dentistSpeciality = new DentistHasSpecialityDTO(appointment.getDentistSpeciality());
     }
