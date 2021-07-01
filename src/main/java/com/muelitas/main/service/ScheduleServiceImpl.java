@@ -44,6 +44,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     @Override
     public ScheduleDTO save(ScheduleDTO scheduleDTO) {
+        scheduleDTO.setScheduleId(null);
         scheduleDTO.setDentist(this.dentistService.findByLicense(scheduleDTO.getDentistLicense()));
         return new ScheduleDTO(this.scheduleRepository.save(new Schedule(scheduleDTO)));
     }
