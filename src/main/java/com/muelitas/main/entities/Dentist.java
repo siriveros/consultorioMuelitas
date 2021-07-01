@@ -1,12 +1,14 @@
 package com.muelitas.main.entities;
 
+import com.muelitas.main.dtos.DentistDTO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Dentist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +21,11 @@ public class Dentist {
     @Column(unique = true)
     private String license;
 
+    public Dentist(DentistDTO dentistDTO) {
+        this.dentistId = dentistDTO.getDentistId();
+        this.name = dentistDTO.getName();
+        this.lastName = dentistDTO.getLastName();
+        this.phone = dentistDTO.getPhone();
+        this.license = dentistDTO.getLicense();
+    }
 }

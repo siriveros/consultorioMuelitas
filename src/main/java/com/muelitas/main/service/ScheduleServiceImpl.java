@@ -4,7 +4,6 @@ import com.muelitas.main.dtos.ScheduleDTO;
 import com.muelitas.main.entities.Schedule;
 import com.muelitas.main.exceptions.DataNotFoundException;
 import com.muelitas.main.repository.ScheduleRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +17,15 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Autowired
     private ScheduleRepository scheduleRepository;
 
+    @Autowired
+    private DentistService dentistService;
+
     @Override
     public List<ScheduleDTO> findAll() {
         List<Schedule> scheduleList = this.scheduleRepository.findAll();
         List<ScheduleDTO> responseList = new ArrayList<>();
         for (Schedule schedule: scheduleList){
-            ScheduleDTO response = new ScheduleDTO();
-            BeanUtils.copyProperties(schedule,response);
-            responseList.add(response);
+            responseList.add(new ScheduleDTO(schedule));
         }
         return responseList;
     }
@@ -36,31 +36,23 @@ public class ScheduleServiceImpl implements ScheduleService{
         if(schedule.isEmpty()){
             throw new DataNotFoundException("Error, no se encontro la agenda:  " + id);
         }
-        ScheduleDTO response = new ScheduleDTO();
-        BeanUtils.copyProperties(schedule.get(),response);
-        return response;
+        return new ScheduleDTO(schedule.get());
     }
 
     @Override
     public ScheduleDTO save(ScheduleDTO scheduleDTO) {
-        Schedule scheduleEntity = new Schedule();
-        BeanUtils.copyProperties(scheduleDTO,scheduleEntity);
-        scheduleEntity = this.scheduleRepository.save(scheduleEntity);
-        BeanUtils.copyProperties(scheduleEntity,scheduleDTO);
-        return scheduleDTO;
+        scheduleDTO.setDentist(this.dentistService.findByLicense(scheduleDTO.getDentistLicense()));
+        return new ScheduleDTO(this.scheduleRepository.save(new Schedule(scheduleDTO)));
     }
 
     @Override
     public ScheduleDTO update(ScheduleDTO scheduleDTO) {
         Optional<Schedule> schedule = this.scheduleRepository.findById(scheduleDTO.getScheduleId());
         if(schedule.isEmpty()){
-            throw new DataNotFoundException("Error, no se encontro la agenda:  " + scheduleDTO.getScheduleId());
+            throw new DataNotFoundException("Error, no se encontro la agenda  " + scheduleDTO.getScheduleId());
         }
-        Schedule scheduleEntity = new Schedule();
-        BeanUtils.copyProperties(scheduleDTO,scheduleEntity);
-        scheduleEntity = this.scheduleRepository.save(scheduleEntity);
-        BeanUtils.copyProperties(scheduleEntity,scheduleDTO);
-        return scheduleDTO;
+        scheduleDTO.setDentist(this.dentistService.findByLicense(scheduleDTO.getDentistLicense()));
+        return new ScheduleDTO(this.scheduleRepository.save(new Schedule(scheduleDTO)));
     }
 
     @Override

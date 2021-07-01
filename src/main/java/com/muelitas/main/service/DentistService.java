@@ -12,6 +12,8 @@ public interface DentistService {
 
     DentistDTO findById(Long id) throws DataNotFoundException;
 
+    DentistDTO findByLicense(String license) throws DataNotFoundException;
+
     DentistDTO save(DentistDTO dentistDTO);
 
     DentistDTO update(DentistDTO dentistDTO);

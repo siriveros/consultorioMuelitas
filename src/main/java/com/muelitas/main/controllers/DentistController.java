@@ -27,6 +27,11 @@ public class DentistController {
         return ResponseEntity.ok(this.dentistService.findById(id));
     }
 
+    @GetMapping("/license/{license}")
+    public ResponseEntity<DentistDTO> findByLicense(@PathVariable String license) throws DataNotFoundException {
+        return ResponseEntity.ok(this.dentistService.findByLicense(license));
+    }
+
     @PostMapping
     public ResponseEntity<DentistDTO> save(@RequestBody DentistDTO dentistDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(this.dentistService.save(dentistDTO));

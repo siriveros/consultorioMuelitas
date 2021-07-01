@@ -1,22 +1,32 @@
 package com.muelitas.main.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.muelitas.main.entities.DentistHasSpeciality;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import javax.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DentistHasSpecialityDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long dentServId;
+    private Long dentServId;
+    private Long dentistId;
+    private Long specialityId;
 
-    @ManyToOne
-    @JoinColumn(name="dentist_id", nullable = false)
+    @JsonIgnore
     private DentistDTO dentist;
 
-    @ManyToOne
-    @JoinColumn(name="speciality_id", nullable = false)
+    @JsonIgnore
     private SpecialityDTO speciality;
 
+    public DentistHasSpecialityDTO(DentistHasSpeciality dentistHasSpeciality) {
+        this.dentServId = dentistHasSpeciality.getDentServId();
+        this.dentistId = dentistHasSpeciality.getDentist().getDentistId();
+        this.specialityId = dentistHasSpeciality.getSpeciality().getSpecialityId();
+
+        this.dentist = new DentistDTO(dentistHasSpeciality.getDentist());
+        this.speciality = new SpecialityDTO(dentistHasSpeciality.getSpeciality());
+    }
 }

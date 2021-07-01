@@ -4,7 +4,6 @@ import com.muelitas.main.dtos.DentistDTO;
 import com.muelitas.main.entities.Dentist;
 import com.muelitas.main.exceptions.DataNotFoundException;
 import com.muelitas.main.repository.DentistRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +22,7 @@ public class DentistServiceImpl implements DentistService{
         List<Dentist> dentistList = this.dentistRepository.findAll();
         List<DentistDTO> responseList = new ArrayList<>();
         for (Dentist dentist: dentistList){
-            DentistDTO response = new DentistDTO();
-            BeanUtils.copyProperties(dentist,response);
-            responseList.add(response);
+            responseList.add(new DentistDTO(dentist));
         }
         return responseList;
     }
@@ -36,18 +33,21 @@ public class DentistServiceImpl implements DentistService{
         if(dentist.isEmpty()){
             throw new DataNotFoundException("Error, no se encontro el odontologo:  " + id);
         }
-        DentistDTO response = new DentistDTO();
-        BeanUtils.copyProperties(dentist.get(),response);
-        return response;
+        return new DentistDTO(dentist.get());
+    }
+
+    @Override
+    public DentistDTO findByLicense(String license) throws DataNotFoundException {
+        Optional<Dentist> dentist = this.dentistRepository.findByLicense(license);
+        if(dentist.isEmpty()){
+            throw new DataNotFoundException("Error, no se encontro el odontologo:  " + license);
+        }
+        return new DentistDTO(dentist.get());
     }
 
     @Override
     public DentistDTO save(DentistDTO dentistDTO) {
-        Dentist dentistEntity = new Dentist();
-        BeanUtils.copyProperties(dentistDTO,dentistEntity);
-        dentistEntity = this.dentistRepository.save(dentistEntity);
-        BeanUtils.copyProperties(dentistEntity,dentistDTO);
-        return dentistDTO;
+        return new DentistDTO(this.dentistRepository.save(new Dentist(dentistDTO)));
     }
 
     @Override
@@ -56,11 +56,7 @@ public class DentistServiceImpl implements DentistService{
         if(dentist.isEmpty()){
             throw new DataNotFoundException("Error, no se encontro el odontologo:  " + dentistDTO.getDentistId());
         }
-        Dentist dentistEntity = new Dentist();
-        BeanUtils.copyProperties(dentistDTO,dentistEntity);
-        dentistEntity = this.dentistRepository.save(dentistEntity);
-        BeanUtils.copyProperties(dentistEntity,dentistDTO);
-        return dentistDTO;
+        return new DentistDTO(this.dentistRepository.save(new Dentist(dentistDTO)));
     }
 
     @Override
