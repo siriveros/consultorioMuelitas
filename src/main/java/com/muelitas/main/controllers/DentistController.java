@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -48,5 +49,8 @@ public class DentistController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @GetMapping("/appointmentCountInDay/{date}")
+    public ResponseEntity<?> getDentistList(@PathVariable String date) throws ParseException {
+        return ResponseEntity.ok(this.dentistService.getDentistByAppointmentCountInDay(date));
+    }
 }

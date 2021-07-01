@@ -1,6 +1,8 @@
 package com.muelitas.main.service;
 
+import com.muelitas.main.dtos.DentistDTO;
 import com.muelitas.main.dtos.ScheduleDTO;
+import com.muelitas.main.entities.Dentist;
 import com.muelitas.main.entities.Schedule;
 import com.muelitas.main.exceptions.DataNotFoundException;
 import com.muelitas.main.repository.ScheduleRepository;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService{
@@ -58,5 +61,15 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public void deleteById(Long id) {
         this.scheduleRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ScheduleDTO> getSchedulesByDentist(String dentistLicense) {
+        DentistDTO dentist = this.dentistService.findByLicense(dentistLicense);
+        List<Schedule> scheduleList = this.scheduleRepository.findByDentist(new Dentist(dentist));
+        List<ScheduleDTO> scheduleDTOList = scheduleList.stream()
+                .map(app -> new ScheduleDTO(app)
+                ).collect(Collectors.toList());
+        return scheduleDTOList;
     }
 }

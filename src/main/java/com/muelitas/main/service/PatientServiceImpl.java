@@ -4,12 +4,17 @@ import com.muelitas.main.dtos.PatientDTO;
 import com.muelitas.main.entities.Patient;
 import com.muelitas.main.exceptions.DataNotFoundException;
 import com.muelitas.main.repository.PatientRepository;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientServiceImpl implements PatientService{
@@ -53,5 +58,18 @@ public class PatientServiceImpl implements PatientService{
     @Override
     public void deleteById(Long id) {
         this.patientRepository.deleteById(id);
+    }
+
+    @Override
+    public List<PatientDTO> getPatientListInDay(String date) throws ParseException {
+        SimpleDateFormat sp = new SimpleDateFormat("dd-MM-yyyy");
+        Date startDate = sp.parse(date);
+        Date endDate = DateUtils.addDays(startDate, 1);
+        List<Patient> list = this.patientRepository.findPatientsByDate(startDate, endDate);
+        List<PatientDTO> patients = list.stream()
+                .map(app -> new PatientDTO(app)
+                ).collect(Collectors.toList());
+
+        return patients;
     }
 }

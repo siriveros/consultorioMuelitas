@@ -1,14 +1,11 @@
 package com.muelitas.main.service;
 
 import com.muelitas.main.dtos.AppointmentDTO;
-import com.muelitas.main.dtos.PatientDTO;
-import com.muelitas.main.dtos.PatientListResponseDTO;
 import com.muelitas.main.entities.Appointment;
-import com.muelitas.main.entities.Patient;
+import com.muelitas.main.enums.AppointmentStatus;
 import com.muelitas.main.exceptions.DataNotFoundException;
 import com.muelitas.main.repository.AppointmentRepository;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,27 +61,25 @@ public class AppointmentServiceImpl implements AppointmentService{
         this.appointmentRepository.deleteById(id);
     }
 
+
     @Override
-    public PatientListResponseDTO getPatientList(String date) throws ParseException {
-        SimpleDateFormat sp = new SimpleDateFormat("dd-MM-yyyy");
-        Date startDate = sp.parse(date);
-        Date endDate = DateUtils.addDays(startDate, 1);
-        List<Appointment> list = this.appointmentRepository.findByDate(startDate, endDate);
-        List<PatientDTO> patients = list.stream()
-                .map(app -> new PatientDTO(app.getPatient())
-        ).collect(Collectors.toList());
-
-
-        PatientListResponseDTO response = new PatientListResponseDTO();
-        response.setPatients(patients);
-        return response;
+    public List<AppointmentDTO> getEndedAppointments() {
+        List<Appointment> appointmentList = this.appointmentRepository.findByStatus(AppointmentStatus.ENDED);
+        List<AppointmentDTO> appointmentDTOList = appointmentList.stream()
+                .map(app -> new AppointmentDTO(app)
+                ).collect(Collectors.toList());
+        return appointmentDTOList;
     }
 
     @Override
-    public void getDentistMoreThanTwo(String date) throws ParseException {
+    public List<AppointmentDTO> getPendingAppointmentsInDay(String date) throws ParseException {
         SimpleDateFormat sp = new SimpleDateFormat("dd-MM-yyyy");
         Date startDate = sp.parse(date);
         Date endDate = DateUtils.addDays(startDate, 1);
-        List<Appointment> list = this.appointmentRepository.findByDateFiterAppointments(startDate, endDate);
+        List<Appointment> appointmentList = this.appointmentRepository.findByStatusAndDate(AppointmentStatus.PENDING,startDate,endDate);
+        List<AppointmentDTO> appointmentDTOList = appointmentList.stream()
+                .map(app -> new AppointmentDTO(app)
+                ).collect(Collectors.toList());
+        return appointmentDTOList;
     }
 }

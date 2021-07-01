@@ -1,7 +1,6 @@
 package com.muelitas.main.service;
 
 import com.muelitas.main.dtos.DentistDTO;
-import com.muelitas.main.dtos.PatientListResponseDTO;
 import com.muelitas.main.exceptions.DataNotFoundException;
 
 import java.text.ParseException;
@@ -22,5 +21,6 @@ public interface DentistService {
 
     void deleteById(Long id);
 
+    List<DentistDTO> getDentistByAppointmentCountInDay(String date) throws ParseException;
 
 }

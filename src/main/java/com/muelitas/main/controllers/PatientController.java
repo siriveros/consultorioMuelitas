@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -41,6 +42,11 @@ public class PatientController {
     public ResponseEntity<?> deleteById(@PathVariable Long id){
         this.patientService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/inDay/{date}")
+    public ResponseEntity<?> getPatientList(@PathVariable String date) throws ParseException {
+        return ResponseEntity.ok(this.patientService.getPatientListInDay(date));
     }
 
 }

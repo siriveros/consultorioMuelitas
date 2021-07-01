@@ -18,4 +18,6 @@ public interface ScheduleService {
 
     void deleteById(Long id);
 
+    List<ScheduleDTO> getSchedulesByDentist(String dentistLicense);
+
 }

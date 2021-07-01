@@ -26,7 +26,7 @@ public class Appointment {
     @JoinColumn(name="dent_serv_id", nullable = false)
     private DentistHasSpeciality dentistSpeciality;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
 
 

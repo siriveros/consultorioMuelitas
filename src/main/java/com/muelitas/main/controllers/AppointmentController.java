@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.util.List;
@@ -45,16 +44,13 @@ public class AppointmentController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/patientList/{date}")
-    public ResponseEntity<?> getPatientList(@PathVariable String date) throws ParseException {
-        System.out.println("here");
-        return ResponseEntity.ok(this.appointmentService.getPatientList(date));
+    @GetMapping("/ended")
+    public ResponseEntity<?> getEndedAppointments() {
+        return ResponseEntity.ok(this.appointmentService.getEndedAppointments());
     }
 
-    @GetMapping("/dentistList/{date}")
-    public ResponseEntity<?> getDentistList(@PathVariable String date) throws ParseException {
-        System.out.println("here");
-        this.appointmentService.getDentistMoreThanTwo(date);
-        return ResponseEntity.ok("Ok");
+    @GetMapping("/pendingInDay/{date}")
+    public ResponseEntity<?> getPendingAppointmentsInDay(@PathVariable String date) throws ParseException {
+        return ResponseEntity.ok(this.appointmentService.getPendingAppointmentsInDay(date));
     }
 }

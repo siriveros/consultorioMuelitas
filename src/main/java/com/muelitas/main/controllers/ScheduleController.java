@@ -43,4 +43,9 @@ public class ScheduleController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/dentist/{dentistLicense}")
+    public ResponseEntity<?> getSchedulesByDentist(@PathVariable String dentistLicense){
+        return ResponseEntity.ok(this.scheduleService.getSchedulesByDentist(dentistLicense));
+    }
+
 }
