@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -43,4 +45,16 @@ public class AppointmentController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/patientList/{date}")
+    public ResponseEntity<?> getPatientList(@PathVariable String date) throws ParseException {
+        System.out.println("here");
+        return ResponseEntity.ok(this.appointmentService.getPatientList(date));
+    }
+
+    @GetMapping("/dentistList/{date}")
+    public ResponseEntity<?> getDentistList(@PathVariable String date) throws ParseException {
+        System.out.println("here");
+        this.appointmentService.getDentistMoreThanTwo(date);
+        return ResponseEntity.ok("Ok");
+    }
 }

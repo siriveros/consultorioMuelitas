@@ -1,13 +1,17 @@
 package com.muelitas.main.service;
 
 import com.muelitas.main.dtos.DentistDTO;
+import com.muelitas.main.dtos.PatientListResponseDTO;
 import com.muelitas.main.entities.Dentist;
 import com.muelitas.main.exceptions.DataNotFoundException;
 import com.muelitas.main.repository.DentistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,4 +67,5 @@ public class DentistServiceImpl implements DentistService{
     public void deleteById(Long id) {
         this.dentistRepository.deleteById(id);
     }
+
 }

@@ -1,8 +1,10 @@
 package com.muelitas.main.service;
 
 import com.muelitas.main.dtos.DentistDTO;
+import com.muelitas.main.dtos.PatientListResponseDTO;
 import com.muelitas.main.exceptions.DataNotFoundException;
 
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -19,5 +21,6 @@ public interface DentistService {
     DentistDTO update(DentistDTO dentistDTO);
 
     void deleteById(Long id);
+
 
 }
